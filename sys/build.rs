@@ -82,7 +82,7 @@ fn main() {
     // build libwhisper.a
     env::set_current_dir("whisper.cpp").expect("Unable to change directory to whisper.cpp");
     _ = std::fs::remove_dir_all("build");
-    _ = std::fs::create_dir("build");
+    _ = std::fs::create_dir("build").expect("Unable to create build dir.");
     env::set_current_dir("build").expect("Unable to change directory to whisper.cpp build");
 
     let mut cmd = std::process::Command::new("cmake");
