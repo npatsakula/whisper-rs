@@ -49,10 +49,12 @@ fn main() {
     }
     println!("cargo:rerun-if-changed=wrapper.h");
 
+    let out = PathBuf::from(env::var("OUT_DIR").unwrap());
+
     if env::var("WHISPER_DONT_GENERATE_BINDINGS").is_ok() {
         let _: u64 = std::fs::copy(
             "src/bindings.rs",
-            env::var("OUT_DIR").unwrap() + "/bindings.rs",
+            out.join("bindings.rs"),
         )
         .expect("Failed to copy bindings.rs");
     } else {
@@ -74,7 +76,7 @@ fn main() {
                 // copy src/bindings.rs to OUT_DIR
                 std::fs::copy(
                     "src/bindings.rs",
-                    env::var("OUT_DIR").unwrap() + "/bindings.rs",
+                    out.join("bindings.rs"),
                 )
                 .expect("Unable to copy bindings.rs");
             }
@@ -136,13 +138,13 @@ fn main() {
         if #[cfg(target_os = "windows")] {
             std::fs::copy(
                 "Release/whisper.lib",
-                format!("{}/whisper.lib", env::var("OUT_DIR").unwrap()),
+                out.join("whisper.lib"),
             )
             .expect("Failed to copy libwhisper.lib");
         } else {
             std::fs::copy(
                 "libwhisper.a",
-                format!("{}/libwhisper.a", env::var("OUT_DIR").unwrap()),
+                out.join("libwhisper.a"),
             )
             .expect("Failed to copy libwhisper.a");
         }
@@ -154,7 +156,7 @@ fn main() {
         {
             std::fs::copy(
                 "libwhisper.coreml.a",
-                format!("{}/libwhisper.coreml.a", env::var("OUT_DIR").unwrap()),
+                out.join("libwhisper.coreml.a"),
             )
             .expect("Failed to copy libwhisper.coreml.a");
         }

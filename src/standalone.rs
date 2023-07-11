@@ -59,16 +59,16 @@ pub fn get_lang_str(id: i32) -> Option<&'static str> {
 ///
 /// # C++ equivalent
 /// `whisper_token whisper_token_translate ()`
-pub fn token_translate() -> WhisperToken {
-    unsafe { whisper_rs_sys::whisper_token_translate() }
+pub fn token_translate(context: *mut whisper_rs_sys::whisper_context) -> WhisperToken {
+    unsafe { whisper_rs_sys::whisper_token_translate(context) }
 }
 
 /// Get the ID of the transcribe task token.
 ///
 /// # C++ equivalent
 /// `whisper_token whisper_token_transcribe()`
-pub fn token_transcribe() -> WhisperToken {
-    unsafe { whisper_rs_sys::whisper_token_transcribe() }
+pub fn token_transcribe(context: *mut whisper_rs_sys::whisper_context) -> WhisperToken {
+    unsafe { whisper_rs_sys::whisper_token_transcribe(context) }
 }
 
 /// Print system information.
