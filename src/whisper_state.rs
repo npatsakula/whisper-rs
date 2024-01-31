@@ -250,21 +250,6 @@ impl<'a> WhisperState<'a> {
         if ret == -1 {
             Err(WhisperError::UnableToCalculateEvaluation)
         } else {
-            assert_eq!(
-                ret as usize,
-                lang_probs.len(),
-                "lang_probs length mismatch: this is a bug in whisper.cpp"
-            );
-            // if we're still running, double check that the length is correct, otherwise print to stderr
-            // and abort, as this will cause Undefined Behavior
-            // might get here due to the unwind being caught by a user-installed panic handler
-            if lang_probs.len() != ret as usize {
-                eprintln!(
-                    "lang_probs length mismatch: this is a bug in whisper.cpp, \
-                aborting to avoid Undefined Behavior"
-                );
-                std::process::abort();
-            }
             Ok(lang_probs)
         }
     }

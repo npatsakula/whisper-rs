@@ -41,6 +41,7 @@ fn main() {
     }
     #[cfg(feature = "cuda")]
     {
+        println!("cargo:rustc-link-lib=cuda");
         println!("cargo:rustc-link-lib=cublas");
         println!("cargo:rustc-link-lib=cudart");
         println!("cargo:rustc-link-lib=cublasLt");
@@ -50,8 +51,14 @@ fn main() {
                 println!("cargo:rustc-link-search={}", cuda_path.display());
             } else {
                 println!("cargo:rustc-link-lib=culibos");
-                println!("cargo:rustc-link-search=/usr/local/cuda/lib64");
-                println!("cargo:rustc-link-search=/opt/cuda/lib64");
+                if let Ok(cuda_path) = std::env::var("CUDA_PATH") {
+                    println!("cargo:rustc-link-search={cuda_path}/lib64");
+                    println!("cargo:rustc-link-search={cuda_path}/lib");
+                    println!("cargo:rustc-link-search={cuda_path}/lib/stubs");
+                } else {
+                    println!("cargo:rustc-link-search=/usr/local/cuda/lib64");
+                    println!("cargo:rustc-link-search=/opt/cuda/lib64");
+                }
             }
         }
     }
