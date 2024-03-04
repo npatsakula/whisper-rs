@@ -536,14 +536,14 @@ pub struct WhisperContextParameters {
     ///
     /// **Warning**: Does not have an effect if OpenCL is selected as GPU backend
     /// (in that case, GPU is always enabled).
-    pub use_gpu: bool,
+    pub gpu: Option<i32>,
 }
 
 #[allow(clippy::derivable_impls)] // this impl cannot be derived
 impl Default for WhisperContextParameters {
     fn default() -> Self {
         Self {
-            use_gpu: cfg!(feature = "_gpu"),
+            gpu: cfg!(feature = "_gpu").then_some(0),
         }
     }
 }
@@ -551,13 +551,14 @@ impl WhisperContextParameters {
     pub fn new() -> Self {
         Self::default()
     }
-    pub fn use_gpu(&mut self, use_gpu: bool) -> &mut Self {
-        self.use_gpu = use_gpu;
+    pub fn use_gpu(&mut self, gpu: Option<usize>) -> &mut Self {
+        self.gpu = gpu.map(|id| id as i32);
         self
     }
     fn to_c_struct(&self) -> whisper_rs_sys::whisper_context_params {
         whisper_rs_sys::whisper_context_params {
-            use_gpu: self.use_gpu,
+            use_gpu: self.gpu.is_some(),
+            gpu_device: self.gpu.unwrap_or_default(),
         }
     }
 }
